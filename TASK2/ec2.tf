@@ -26,6 +26,10 @@ data "aws_subnets" "public" {
   }
 }
 
+data "aws_subnet" "public" {
+  id = tolist(data.aws_subnets.public.ids)[0]
+}
+
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -54,7 +58,7 @@ data "aws_ami" "al2023" {
 resource "aws_instance" "lab" {
   ami                         = data.aws_ami.al2023.id
   instance_type               = var.instance_type
-  subnet_id                   = tolist(data.aws_subnets.public.ids)[0]
+  subnet_id                   = data.aws_subnet.public.id
   associate_public_ip_address = true
   key_name                    = aws_key_pair.this.key_name
   vpc_security_group_ids      = [data.aws_security_group.lab.id]

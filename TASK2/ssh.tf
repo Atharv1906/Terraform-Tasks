@@ -17,7 +17,7 @@ locals {
 
 resource "aws_key_pair" "this" {
   key_name   = local.names.key_pair
-    public_key = var.ssh_key
+  public_key = var.ssh_key
 
   tags = local.common_tags
 }
