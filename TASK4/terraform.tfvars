@@ -1,0 +1,7 @@
+aws_region                = "eu-west-1"
+iam_group_name            = "cmtr-f8mezz9s-iam-group"
+iam_policy_name           = "cmtr-f8mezz9s-iam-policy"
+iam_role_name             = "cmtr-f8mezz9s-iam-role"
+iam_instance_profile_name = "cmtr-f8mezz9s-iam-instance-profile"
+s3_bucket_name            = "cmtr-f8mezz9s-bucket-1780058279"
+project_tag               = "cmtr-f8mezz9s"
