@@ -50,6 +50,7 @@ resource "aws_launch_template" "this" {
     INSTANCE_ID=$(curl -sH "X-aws-ec2-metadata-token: $TOKEN" "http://169.254.169.254/latest/meta-data/instance-id")
     PRIVATE_IP=$(curl -sH "X-aws-ec2-metadata-token: $TOKEN" "http://169.254.169.254/latest/meta-data/local-ipv4")
     AZ=$(curl -sH "X-aws-ec2-metadata-token: $TOKEN" "http://169.254.169.254/latest/meta-data/placement/availability-zone")
+    INSTANCE_UUID=$(cat /proc/sys/kernel/random/uuid)
 
     cat <<HTML > /var/www/html/index.html
     <!doctype html>
@@ -57,6 +58,7 @@ resource "aws_launch_template" "this" {
       <head><title>Instance Info</title></head>
       <body>
         <h1>Hello from EC2</h1>
+        <p>UUID: $INSTANCE_UUID</p>
         <p>Instance ID: $INSTANCE_ID</p>
         <p>Private IP: $PRIVATE_IP</p>
         <p>AZ: $AZ</p>
@@ -134,6 +136,14 @@ resource "aws_autoscaling_group" "this" {
   launch_template {
     id      = aws_launch_template.this.id
     version = "$Latest"
+  }
+
+  instance_refresh {
+    strategy = "Rolling"
+
+    preferences {
+      min_healthy_percentage = 50
+    }
   }
 
   tag {
